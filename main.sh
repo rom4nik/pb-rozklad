@@ -6,11 +6,17 @@ if (( $# != 1 )); then
 fi
 source $1
 
-script_path=$(dirname $(realpath $0))
-cd $script_path
-mkdir -p "data/workdir" 
-if [ $ARCHIVE_LOCAL = true ]; then mkdir -p "data/archive"; fi
-cd "data/workdir"
+if [ "$DOCKER" = true ]; then
+    script_path="/pb-rozklad"
+    cd /data
+else
+    script_path=$(dirname $(realpath $0))
+    cd $script_path
+    cd "data"
+fi
+mkdir -p "workdir" 
+if [ $ARCHIVE_LOCAL = true ]; then mkdir -p "archive"; fi
+cd "workdir"
 
 
 http_status=$(curl -o /dev/null -LIsw "%{http_code}" $PDF_URL)
@@ -50,7 +56,7 @@ if [ $DC_ENABLED = true ]; then
 fi
 if [ $FB_ENABLED = true ]; then
     export FB_ENABLED FB_EMAIL FB_PASS FB_TOTP FB_GROUP_ID FB_MESSAGE diff_exitcode
-    source $script_path"/venv/bin/activate"
+    #source $script_path"/venv/bin/activate"
     python3 $script_path"/msg_facebook.py"
 fi
 
@@ -58,7 +64,11 @@ if [ $ARCHIVE_WAYBACK = true ]; then
     curl -o /dev/null "https://web.archive.org/save/$ROZKLAD_URL" -w %{url_effective} -Ls
 fi
 if [ $ARCHIVE_LOCAL = true ]; then
-    cp $pdf_nice $script_path"/data/archive/"
+    if [ "$DOCKER" = true ]; then
+        cp $pdf_nice "/data/archive/"
+    else
+        cp $pdf_nice $script_path"/data/archive/"
+    fi
 fi
 
 # cleanup
