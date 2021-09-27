@@ -6,14 +6,9 @@ if (( $# != 1 )); then
 fi
 source $1
 
-if [ "$DOCKER" = true ]; then
-    script_path="/pb-rozklad"
-    cd /data
-else
-    script_path=$(dirname $(realpath $0))
-    cd $script_path
-    cd "data"
-fi
+script_path="/pb-rozklad"
+cd /data
+
 mkdir -p "workdir" 
 if [ $ARCHIVE_LOCAL = true ]; then mkdir -p "archive"; fi
 cd "workdir"
@@ -59,11 +54,7 @@ if [ $ARCHIVE_WAYBACK = true ]; then
     curl -o /dev/null "https://web.archive.org/save/$ROZKLAD_URL" -w %{url_effective} -Ls
 fi
 if [ $ARCHIVE_LOCAL = true ]; then
-    if [ "$DOCKER" = true ]; then
-        cp $pdf_nice "/data/archive/"
-    else
-        cp $pdf_nice $script_path"/data/archive/"
-    fi
+    cp $pdf_nice "/data/archive/"
 fi
 
 # cleanup

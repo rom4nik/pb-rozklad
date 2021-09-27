@@ -9,5 +9,4 @@ COPY . .
 USER 1000:1000
 VOLUME ["/data"]
 
-ENV DOCKER=true
 CMD ["/bin/bash", "main.sh", "/data/config.txt"]
