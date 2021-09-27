@@ -54,11 +54,6 @@ if [ $DC_ENABLED = true ]; then
     export DC_WEBHOOK DC_MESSAGE pdf_nice diff_exitcode
     bash $script_path"/msg_discord.sh"
 fi
-if [ $FB_ENABLED = true ]; then
-    export FB_ENABLED FB_EMAIL FB_PASS FB_TOTP FB_GROUP_ID FB_MESSAGE diff_exitcode
-    #source $script_path"/venv/bin/activate"
-    python3 $script_path"/msg_facebook.py"
-fi
 
 if [ $ARCHIVE_WAYBACK = true ]; then
     curl -o /dev/null "https://web.archive.org/save/$ROZKLAD_URL" -w %{url_effective} -Ls

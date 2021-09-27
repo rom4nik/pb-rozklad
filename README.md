@@ -11,7 +11,6 @@ Run: `docker run --rm --name pb-rozklad-test --volume "<ścieżka-do-danych>:/da
 ### Wymagane:
 Shell: bash, curl, diff, imagemagick (convert, compare), ghostscript
 
-Python3: fbchat, pyotp
 
 ### Konfiguracja:
 - Odblokowanie konwersji PDF w ImageMagick: https://stackoverflow.com/a/59193253

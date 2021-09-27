@@ -7,11 +7,3 @@ ARCHIVE_LOCAL=true
 DC_ENABLED=true
 DC_WEBHOOK="https://discordapp.com/api/webhooks/123456789012345678/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 DC_MESSAGE="nowy rozkład:"
-
-
-FB_ENABLED=true
-FB_EMAIL="mail@mail.com"
-FB_PASS="hunter2"
-FB_TOTP="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-FB_GROUP_ID="1234567890123456"
-FB_MESSAGE="nowy rozkład:"
