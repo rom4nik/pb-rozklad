@@ -1,0 +1,8 @@
+version: "2"
+services:
+  pb-rozklad:
+    image: rom4nik/pb-rozklad
+    environment:
+      - SLEEPTIME=5m
+    volumes:
+      - ./data/pb-rozklad:/data
