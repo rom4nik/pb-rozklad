@@ -1,57 +1,61 @@
 #!/bin/bash
-if (( $# != 1 )); then
-    echo "Usage:"
-    echo $0 "config-file"
-    exit 1
-fi
+# load config file with env variables
 source $1
 
-script_path="/pb-rozklad"
-cd /data
-
-mkdir -p "workdir" 
-if [ $ARCHIVE_LOCAL = true ]; then mkdir -p "archive"; fi
-cd "workdir"
+# prepare data directory
+mkdir -p /data/workdir 
+if [ $ARCHIVE_LOCAL = true ]; then mkdir -p /data/archive; fi
 
 
+cd /data/workdir
+# check if PDF exists on webserver
 http_status=$(curl -o /dev/null -LIsw "%{http_code}" $PDF_URL)
 if [ $http_status -ne 200 ]; then
     echo "Error: server returned status code" $http_status
     exit 1
 fi
-curl -o "current.pdf" $PDF_URL -s
+# if PDF exists, download it
+curl -so "current.pdf" $PDF_URL
 
+# check if PDF for previous schedule exists, compare with current if it does
 if [ -r "previous.pdf" ]; then
     diff "previous.pdf" "current.pdf"
     diff_exitcode=$?
-    if [ $diff_exitcode -eq 0 ]; then
+    if [ $diff_exitcode -eq 0 ]; then # PDFs are the same
         rm "current.pdf"
         exit 0
-    elif [ $diff_exitcode -ne 1 ]; then
+    elif [ $diff_exitcode -ne 1 ]; then # some error thrown
         echo "Diff exited with code" $diff_exitcode
         exit 1
     fi
 else
+    # PDF for previous schedule doesn't exist
+    # don't create a comparison image, send PNG of only the current PDF
     diff_exitcode=-1
 fi
 
+# create a PNG of current PDF
 convert -flatten -density 400 "current.pdf" "current.png"
+# if current and previous PDFs differ
 if [ $diff_exitcode -eq 1 ]; then
 	convert -flatten -density 400 "previous.pdf" "previous.png"
+    # important order of arguments: current PNG will be the background,
+    # parts of it where blocks were added or removed will appear with a red overlay
 	compare "current.png" "previous.png" "comparison.png"
 fi
 
-# nicer name for Discord upload and local archive
+# create a symlink of current PDF with a nicer name for upload and local archive
 pdf_nice="$(date $PDF_DATE_FORMAT)"
 ln -s "current.pdf" $pdf_nice
 
 if [ $DC_ENABLED = true ]; then
     export DC_WEBHOOK DC_MESSAGE pdf_nice diff_exitcode
-    bash $script_path"/msg_discord.sh"
+    bash /app/msg_discord.sh
 fi
 
+# TODO: check if that still works
 if [ $ARCHIVE_WAYBACK = true ]; then
-    curl -o /dev/null "https://web.archive.org/save/$ROZKLAD_URL" -w %{url_effective} -Ls
+    curl -o /dev/null "https://web.archive.org/save/$PDF_URL" -w %{url_effective} -Ls
 fi
 if [ $ARCHIVE_LOCAL = true ]; then
     cp $pdf_nice "/data/archive/"
