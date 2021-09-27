@@ -8,4 +8,4 @@ COPY src /app
 USER 1000:1000
 VOLUME ["/data"]
 
-CMD ["/bin/bash", "/app/main.sh", "/data/config.txt"]
+CMD ["/bin/sh", "/app/runner.sh"]
