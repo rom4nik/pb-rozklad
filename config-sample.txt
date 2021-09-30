@@ -12,3 +12,8 @@ DC_MESSAGE="nowy rozkład:"
 FB_ENABLED=true
 FB_THREAD_ID="123456789"
 FB_MESSAGE="nowy rozkład:"
+
+
+MX_ENABLED=true
+MX_ROOM_ID="!xxxxxx:example.com"
+MX_MESSAGE="nowy rozkład:"

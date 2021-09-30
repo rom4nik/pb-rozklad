@@ -58,6 +58,11 @@ if [ $FB_ENABLED = true ]; then
     node /app/msg_facebook/msg_facebook.js
 fi
 
+if [ $MX_ENABLED = true ]; then
+    export MX_ROOM_ID MX_MESSAGE pdf_nice diff_exitcode
+    bash /app/msg_matrix.sh
+fi
+
 # TODO: check if that still works
 if [ $ARCHIVE_WAYBACK = true ]; then
     curl -o /dev/null "https://web.archive.org/save/$PDF_URL" -w %{url_effective} -Ls
