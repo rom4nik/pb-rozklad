@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "facebook-chat-api": "github:Schmavery/facebook-chat-api"
+  }
+}

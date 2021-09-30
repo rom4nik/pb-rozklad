@@ -53,6 +53,11 @@ if [ $DC_ENABLED = true ]; then
     bash /app/msg_discord.sh
 fi
 
+if [ $FB_ENABLED = true ]; then
+    export FB_THREAD_ID FB_MESSAGE pdf_nice diff_exitcode
+    node /app/msg_facebook/msg_facebook.js
+fi
+
 # TODO: check if that still works
 if [ $ARCHIVE_WAYBACK = true ]; then
     curl -o /dev/null "https://web.archive.org/save/$PDF_URL" -w %{url_effective} -Ls
