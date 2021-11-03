@@ -36,6 +36,14 @@ fi
 
 # create a PNG of current PDF
 convert -flatten -density 400 "current.pdf" "current.png"
+convert_exitcode=$?
+# if convert fails
+if [$convert_exitcode -ne 0]; then
+    echo "Current PDF might be damaged, convert exited with code" $convert_exitcode
+    rm "current.pdf"
+    exit 1
+fi
+
 # if current and previous PDFs differ
 if [ $diff_exitcode -eq 1 ]; then
 	convert -flatten -density 400 "previous.pdf" "previous.png"
