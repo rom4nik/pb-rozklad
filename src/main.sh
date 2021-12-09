@@ -38,7 +38,7 @@ fi
 convert -flatten -density 400 "current.pdf" "current.png"
 convert_exitcode=$?
 # if convert fails
-if [$convert_exitcode -ne 0]; then
+if [ $convert_exitcode -ne 0 ]; then
     echo "Current PDF might be damaged, convert exited with code" $convert_exitcode
     rm "current.pdf"
     exit 1
